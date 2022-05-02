@@ -53,7 +53,7 @@ class NewMood extends StatelessWidget {
                 ),
                 SliderWidget(
                   onChanged: (value) {
-                    _mood = (value*10).round();
+                    _mood = (value*10).floor();
                   },
                 ),
               ],

@@ -68,7 +68,7 @@ class MoodAPI {
         throw Exception('You can only post data every hour');
       }
     }
-    final response = await http.post(Uri(path: 'sur_10-$name-$mood', host: _baseUrl, scheme: 'http'));
+    final response = await http.get(Uri(path: 'sur_10-$name-$mood', host: _baseUrl, scheme: 'http'));
     if (response.statusCode == 200) {
       return;
     } else {
