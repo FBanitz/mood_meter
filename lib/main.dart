@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugPrint(value.toString());
     });
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: 'Mood Meter',
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 197, 132, 33),
         scaffoldBackgroundColor: const Color(0xFF303030),
