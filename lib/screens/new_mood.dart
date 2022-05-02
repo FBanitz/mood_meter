@@ -12,6 +12,7 @@ class NewMood extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController _nameController = TextEditingController();
     int _mood = 0;
+    Function? _refreshGraph = Get.arguments['refresh_graph'];
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +92,7 @@ class NewMood extends StatelessWidget {
                           ),
                         ],
                       );
-                    });
+                    }).then((_) => _refreshGraph?.call());
                     Get.back();
                   }, 
                   child: const Text('Ajouter'),

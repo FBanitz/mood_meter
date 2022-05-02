@@ -28,6 +28,10 @@ class _MoodGraphState extends State<MoodGraph> {
     super.initState();
   }
 
+  refresh(){
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +40,7 @@ class _MoodGraphState extends State<MoodGraph> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.toNamed('/new_mood');
+          Get.toNamed('/new_mood', arguments: {'refresh_graph': refresh});
         },
         child: const Icon(Icons.add),
       ),
