@@ -59,4 +59,13 @@ class MoodAPI {
     }
 
   }
+
+  static Future<void> postData(String name, int mood) async {
+    final response = await http.get(Uri(path: 'sur_10-$name-$mood', host: _baseUrl, scheme: 'http'));
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 }

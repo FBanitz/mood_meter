@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mood_meter/controllers/mood_api.dart';
 import 'package:mood_meter/screens/graph.dart';
+import 'package:mood_meter/screens/new_mood.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,12 +25,27 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 197, 132, 33),
         scaffoldBackgroundColor: const Color(0xFF303030),
+        appBarTheme: const AppBarTheme(
+          color: Color.fromARGB(255, 197, 132, 33),
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color.fromARGB(255, 197, 132, 33),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(primary: const Color.fromARGB(255, 197, 132, 33,),)
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(primary: const Color.fromARGB(255, 197, 132, 33,),)
+        ),
         textTheme: const TextTheme(
+          button: TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
       routes: {
         '/' : (_) => const MoodGraph(),
-        // '/new_mood' : (_) => const NewMood(),
+        '/new_mood' : (_) => const NewMood(),
       },
       initialRoute: '/',
     );
