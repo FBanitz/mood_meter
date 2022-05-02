@@ -79,7 +79,19 @@ class NewMood extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    MoodAPI.postData(_nameController.text, _mood);
+                    MoodAPI.postData(_nameController.text, _mood).catchError((error) {
+                      Get.defaultDialog(
+                        title: 'Erreur',
+                        backgroundColor: const Color(0xFF303030),
+                        content: Text(error.toString(), style: TextStyle(color: Colors.white),),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () => Get.back(),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    });
                     Get.back();
                   }, 
                   child: const Text('Ajouter'),

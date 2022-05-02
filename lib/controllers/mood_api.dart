@@ -61,11 +61,18 @@ class MoodAPI {
   }
 
   static Future<void> postData(String name, int mood) async {
-    final response = await http.get(Uri(path: 'sur_10-$name-$mood', host: _baseUrl, scheme: 'http'));
+    List<User> existingData = await getData();
+    if (existingData.any((user) => user.name == name)) {
+      int difference = DateTime.now().difference(existingData.firstWhere((user) => user.name == name).moods.last.date).inHours;
+      if (difference < 1) {
+        throw Exception('You can only post data every hour');
+      }
+    }
+    final response = await http.post(Uri(path: 'sur_10-$name-$mood', host: _baseUrl, scheme: 'http'));
     if (response.statusCode == 200) {
       return;
     } else {
-      throw Exception('Failed to load data');
+      throw Exception(response.reasonPhrase);
     }
   }
 }

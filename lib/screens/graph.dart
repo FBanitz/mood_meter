@@ -1,7 +1,6 @@
 // This software uses the CC BY-SA 4.0 license (https://creativecommons.org/licenses/by-sa/4.0/legalcode).
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:mood_meter/controllers/mood_api.dart';
 import 'package:mood_meter/models/mood_data.dart';
