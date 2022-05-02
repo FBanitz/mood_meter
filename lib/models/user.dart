@@ -6,4 +6,9 @@ class User {
   String name;
   List<MoodData> moods;
   User({this.name = "", this.moods = const[]});
+
+  @override
+  String toString() {
+    return 'User{name: $name, moods: $moods}';
+  }
 }

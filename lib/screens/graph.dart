@@ -1,7 +1,9 @@
 // This software uses the CC BY-SA 4.0 license (https://creativecommons.org/licenses/by-sa/4.0/legalcode).
 
 import 'package:flutter/material.dart';
+import 'package:mood_meter/controllers/mood_api.dart';
 import 'package:mood_meter/models/mood_data.dart';
+import 'package:mood_meter/models/user.dart';
 import 'package:mood_meter/utils/datetime_extension.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
@@ -32,75 +34,62 @@ class _MoodGraphState extends State<MoodGraph> {
         title: const Text('Mood Graph'),
       ),
       body: Center(
-        child: SfCartesianChart(
-          primaryXAxis: DateTimeAxis(
-            title: AxisTitle(text: 'dd/mm/yyyy'),
-            name: 'Mood',
-            dateFormat: DateFormat("dd/MM/yyyy"),
-            axisLabelFormatter: (AxisLabelRenderDetails args) {
-              late String text;
-              print(args.value);
-              text = DateTime.fromMillisecondsSinceEpoch(args.value.toInt()).dateString;
-              return ChartAxisLabel(text, args.textStyle);
-            },
-          ),
-          primaryYAxis: NumericAxis(
-            rangePadding: ChartRangePadding.additional,
-            // Assigned a name for the y-axis for customization purposes
-            name: 'Date'
-          ),
-          // Enable legend
-          legend: Legend(
-            isVisible: true,
-            textStyle: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-          // Enable tooltip
-          tooltipBehavior: _tooltipBehavior,
-
-          series: <LineSeries<MoodData, DateTime>>[
-            LineSeries<MoodData, DateTime>(
-              name: "Bastien",
-              dataSource:  <MoodData>[
-                MoodData(date: DateTime(2022, 04, 28), mood: 5),
-                MoodData(date: DateTime(2022, 04, 30), mood: 7),
-                MoodData(date: DateTime(2022, 05, 01), mood: 8),
-                MoodData(date: DateTime(2022, 05, 02), mood: 3),
-                MoodData(date: DateTime(2022, 05, 04), mood: 9),
-                MoodData(date: DateTime(2022, 05, 05), mood: 10),
-              ],
-              xValueMapper: (MoodData data, _) => data.date,
-              yValueMapper: (MoodData data, _) => data.mood,
-              // Enable data label
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
-                textStyle: TextStyle(
-                  color: Colors.white,
+        child: FutureBuilder<List<User>>(
+          future: MoodAPI.getData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData) {
+              return const CircularProgressIndicator(color: Colors.blue,);
+            } else {
+              List<User> users = snapshot.data!;
+              return SfCartesianChart(
+                primaryXAxis: DateTimeAxis(
+                  title: AxisTitle(text: 'dd/mm/yyyy'),
+                  name: 'Date',
+                  dateFormat: DateFormat("dd/MM/yyyy - HH:mm:ss"),
+                  axisLabelFormatter: (AxisLabelRenderDetails args) {
+                    late String text;
+                    print(args.value);
+                    text = DateTime.fromMillisecondsSinceEpoch(args.value.toInt()).dateString;
+                    return ChartAxisLabel(text, args.textStyle);
+                  },
                 ),
-              )
-            ),
-            LineSeries<MoodData, DateTime>(
-              name: "Chien",
-              dataSource:  <MoodData>[
-                MoodData(date: DateTime(2022, 04, 29), mood: 8),
-                MoodData(date: DateTime(2022, 04, 30), mood: 5),
-                MoodData(date: DateTime(2022, 05, 01), mood: 6),
-                MoodData(date: DateTime(2022, 05, 02), mood: 5),
-                MoodData(date: DateTime(2022, 05, 03), mood: 4),
-                MoodData(date: DateTime(2022, 05, 05), mood: 10),
-              ],
-              xValueMapper: (MoodData data, _) => data.date,
-              yValueMapper: (MoodData data, _) => data.mood,
-              // Enable data label
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
-                textStyle: TextStyle(
-                  color: Colors.white,
+                primaryYAxis: NumericAxis(
+                  rangePadding: ChartRangePadding.additional,
+                  // Assigned a name for the y-axis for customization purposes
+                  name: 'Mood',
+                  // Setting the minimum and maximum values of the y-axis
+                  minimum: 0,
+                  maximum: 10,
                 ),
-              )
-            ),
-          ],
+                // Enable legend
+                legend: Legend(
+                  isVisible: true,
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                // Enable tooltip
+                tooltipBehavior: _tooltipBehavior,
+          
+                series: <LineSeries<MoodData, DateTime>>[] + users.map((user) => LineSeries<MoodData, DateTime>(
+                    name: user.name,
+                    dataSource: user.moods,
+                    xValueMapper: (MoodData data, _) => data.date,
+                    yValueMapper: (MoodData data, _) => data.mood,
+                    // Enable data label
+                    dataLabelSettings: const DataLabelSettings(
+                      isVisible: true,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )
+                  ),
+                ).toList()
+              );
+            }
+          }
         ),
       ),
     );

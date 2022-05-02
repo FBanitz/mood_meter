@@ -5,4 +5,9 @@ class MoodData {
   final int mood;
 
   MoodData({required this.date, this.mood = 0});
+
+  @override
+  String toString() {
+    return 'MoodData{date: $date, mood: $mood}';
+  }
 }
